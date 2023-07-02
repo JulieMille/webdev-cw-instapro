@@ -13,7 +13,7 @@ export function renderPostsPageComponent({ appEl }) {
    */
 
   let possstsHtml = posssts.map((possst, index) => {
-    return `<li class="post">
+    return `<li class="post" data-post-index=${index}>
                       <div class="post-header" data-user-id="${possst.userId}">
                           <img src="${possst.userImageUrl}" class="post-header__user-image">
                           <p class="post-header__user-name">${possst.userName}</p>

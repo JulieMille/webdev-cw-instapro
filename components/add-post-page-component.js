@@ -1,5 +1,9 @@
 import { renderHeaderComponent } from "./header-component.js";
 import { renderUploadImageComponent } from "./upload-image-component.js";
+import { sendPost, uploadImage } from "../api.js";
+import { getToken } from "../index.js"
+
+let url = '';
 
 export function renderAddPostPageComponent({ appEl, onAddPostClick }) {
   const render = () => {
@@ -27,14 +31,28 @@ export function renderAddPostPageComponent({ appEl, onAddPostClick }) {
       element: document.querySelector(".choose-picture-button"),
       onImageUrlChange: (imageUrl) => {
         imageUrl = imageUrl;
+        url = imageUrl;
       }
     })
 
+    const postDescriptionInput = document.querySelector(".post-description-input");
+
     document.getElementById("add-button").addEventListener("click", () => {
+      uploadImage({ url })
+        .then((data) => {
+          console.log(data.fileUrl);
+          url = data.fileUrl;
+          return url;
+        })
       onAddPostClick({
-        description: "Описание картинки",
-        imageUrl: "https://image.png",
+        description: postDescriptionInput.value,
+        imageUrl: url,
       });
+      sendPost({
+        token: getToken(),
+        description: postDescriptionInput.value,
+        imageUrl: url,
+      })
     });
   };
 

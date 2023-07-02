@@ -1,7 +1,10 @@
+import { renderApp } from "./index.js";
+
 // Замени на свой, чтобы получить независимый от других набор данных.
 // "боевая" версия инстапро лежит в ключе prod
 const personalKey = "prod";
-const baseHost = "https://webdev-hw-api.vercel.app";
+// const personalKey = "JulieS";
+const baseHost = "https://webdev-api.sky.pro";
 const postsHost = `${baseHost}/api/v1/${personalKey}/instapro`;
 export let posssts = [];
 
@@ -21,24 +24,49 @@ export function getPosts({ token }) {
     })
     .then((responseData) => {
       const appPosts = responseData.posts
-      .map((post) => {
-        return {
-          id: post.id,
-          imageUrl: post.imageUrl,
-          date: post.createdAt,
-          text: post.description,
-          userId: post.user.id,
-          userName: post.user.name,
-          login: post.user.login,
-          userImageUrl: post.user.imageUrl,
-          likes: post.likes,
-          isLiked: post.isLiked,
-        };
-      });
+        .map((post) => {
+          return {
+            id: post.id,
+            imageUrl: post.imageUrl,
+            date: post.createdAt,
+            text: post.description,
+            userId: post.user.id,
+            userName: post.user.name,
+            login: post.user.login,
+            userImageUrl: post.user.imageUrl,
+            likes: post.likes,
+            isLiked: post.isLiked,
+          };
+        });
       return appPosts;
     })
-    .then ((data) => {
+    .then((data) => {
       posssts = data;
+    });
+}
+
+export function sendPost({ token, description, imageUrl }) {
+  return fetch(postsHost, {
+    method: "POST",
+    body: JSON.stringify({
+      description: description,
+      imageUrl: imageUrl,
+    }),
+    headers: {
+      Authorization: token,
+    },
+  })
+    .then((response) => {
+      if (response.status === 401) {
+        throw new Error("Нет авторизации");
+      }
+
+      return response.json();
+    })
+    .then((responseData) => {
+      console.log(responseData);
+      getPosts({ token });
+      renderApp();
     });
 }
 

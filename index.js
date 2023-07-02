@@ -1,4 +1,4 @@
-import { getPosts } from "./api.js";
+import { getPosts, posssts } from "./api.js";
 import { renderAddPostPageComponent } from "./components/add-post-page-component.js";
 import { renderAuthPageComponent } from "./components/auth-page-component.js";
 import {
@@ -85,6 +85,8 @@ export const goToPage = (newPage, data) => {
 
 const renderApp = () => {
   const appEl = document.getElementById("app");
+  getPosts({ getToken });
+  console.log(posssts);
   if (page === LOADING_PAGE) {
     return renderLoadingPageComponent({
       appEl,

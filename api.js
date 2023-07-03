@@ -4,7 +4,7 @@ import { renderApp } from "./index.js";
 // "боевая" версия инстапро лежит в ключе prod
 const personalKey = "prod";
 // const personalKey = "JulieS";
-const baseHost = "https://webdev-api.sky.pro";
+const baseHost = "https://wedev-api.sky.pro";
 const postsHost = `${baseHost}/api/v1/${personalKey}/instapro`;
 export let posssts = [];
 

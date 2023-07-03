@@ -88,7 +88,7 @@ export const goToPage = (newPage, data) => {
 export const renderApp = () => {
   const appEl = document.getElementById("app");
   getPosts({
-    token: getToken,
+    token: getToken(),
   });
   console.log(posssts);
   if (page === LOADING_PAGE) {

@@ -50,7 +50,9 @@ export function renderAddPostPageComponent({ appEl, onAddPostClick }) {
       });
       sendPost({
         token: getToken(),
-        description: postDescriptionInput.value,
+        description: postDescriptionInput.value
+          .replaceAll('<', '&lt')
+          .replaceAll('>', '&gt'),
         imageUrl: url,
       })
     });

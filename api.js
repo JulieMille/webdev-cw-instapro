@@ -61,6 +61,10 @@ export function sendPost({ token, description, imageUrl }) {
       if (response.status === 401) {
         throw new Error("Нет авторизации");
       }
+      if (response.status === 400) {
+        alert(`Заполните все поля и загрузите фото`);
+        throw new Error("Поля не заполнены");
+      }
 
       return response.json();
     })

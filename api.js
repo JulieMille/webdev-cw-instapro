@@ -7,6 +7,7 @@ const personalKey = "prod";
 const baseHost = "https://wedev-api.sky.pro";
 const postsHost = `${baseHost}/api/v1/${personalKey}/instapro`;
 export let posssts = [];
+export let userPosssts = [];
 
 export function getPosts({ token }) {
   return fetch(postsHost, {
@@ -67,6 +68,26 @@ export function sendPost({ token, description, imageUrl }) {
       console.log(responseData);
       getPosts({ token });
       renderApp();
+    });
+}
+
+export function getUserPosts({ token, id }) {
+  return fetch(postsHost + "/user-posts/" + id, {
+    method: "GET",
+    headers: {
+      Authorization: token,
+    },
+  })
+    .then((response) => {
+      if (response.status === 401) {
+        throw new Error("Нет авторизации");
+      }
+
+      return response.json();
+    })
+    .then((responseData) => {
+      userPosssts = responseData.posts;
+      return userPosssts;
     });
 }
 

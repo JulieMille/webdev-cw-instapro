@@ -1,4 +1,4 @@
-import { getPosts, posssts } from "./api.js";
+import { getPosts, posssts, userPosssts, getUserPosts } from "./api.js";
 import { renderAddPostPageComponent } from "./components/add-post-page-component.js";
 import { renderAuthPageComponent } from "./components/auth-page-component.js";
 import {
@@ -15,10 +15,12 @@ import {
   removeUserFromLocalStorage,
   saveUserToLocalStorage,
 } from "./helpers.js";
+import { renderUserPostsPageComponent } from "./components/user-posts-page-component.js";
 
 export let user = getUserFromLocalStorage();
 export let page = null;
 export let posts = [];
+let key = '';
 
 export const getToken = () => {
   const token = user ? `Bearer ${user.token}` : undefined;
@@ -73,7 +75,8 @@ export const goToPage = (newPage, data) => {
       console.log("Открываю страницу пользователя: ", data.userId);
       page = USER_POSTS_PAGE;
       posts = [];
-      return renderApp();
+      key = data.userId;
+      return renderApp(), key;
     }
 
     page = newPage;
@@ -130,9 +133,16 @@ export const renderApp = () => {
   }
 
   if (page === USER_POSTS_PAGE) {
-    // TODO: реализовать страницу фотографию пользвателя
-    appEl.innerHTML = "Здесь будет страница фотографий пользователя";
-    return;
+    console.log(`айди юзера ${key}`);
+    getUserPosts({
+      token: getToken(),
+      id: key,
+    })
+      .then((newPosts) => {
+        let userPosssts = newPosts;
+        return renderUserPostsPageComponent({ appEl, userPosssts })
+      })
+
   }
 };
 

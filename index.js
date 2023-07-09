@@ -1,4 +1,4 @@
-import { getPosts, posssts } from "./api.js";
+import { getPosts, posssts, userPosssts, getUserPosts } from "./api.js";
 import { renderAddPostPageComponent } from "./components/add-post-page-component.js";
 import { renderAuthPageComponent } from "./components/auth-page-component.js";
 import {
@@ -15,12 +15,14 @@ import {
   removeUserFromLocalStorage,
   saveUserToLocalStorage,
 } from "./helpers.js";
+import { renderUserPostsPageComponent } from "./components/user-posts-page-component.js";
 
 export let user = getUserFromLocalStorage();
 export let page = null;
 export let posts = [];
+let key = '';
 
-const getToken = () => {
+export const getToken = () => {
   const token = user ? `Bearer ${user.token}` : undefined;
   return token;
 };
@@ -30,6 +32,8 @@ export const logout = () => {
   removeUserFromLocalStorage();
   goToPage(POSTS_PAGE);
 };
+
+// export let token = "Bearer c8csb0bkb8c8bobwccd46gc8csb0bkb8c8bobwccd46gc8csb0bkb8c8bobwccd4"
 
 /**
  * Включает страницу приложения
@@ -71,7 +75,8 @@ export const goToPage = (newPage, data) => {
       console.log("Открываю страницу пользователя: ", data.userId);
       page = USER_POSTS_PAGE;
       posts = [];
-      return renderApp();
+      key = data.userId;
+      return renderApp(), key;
     }
 
     page = newPage;
@@ -83,9 +88,11 @@ export const goToPage = (newPage, data) => {
   throw new Error("страницы не существует");
 };
 
-const renderApp = () => {
+export const renderApp = () => {
   const appEl = document.getElementById("app");
-  getPosts({ getToken });
+  getPosts({
+    token: getToken(),
+  });
   console.log(posssts);
   if (page === LOADING_PAGE) {
     return renderLoadingPageComponent({
@@ -122,13 +129,21 @@ const renderApp = () => {
   if (page === POSTS_PAGE) {
     return renderPostsPageComponent({
       appEl,
+      posssts,
     });
   }
 
   if (page === USER_POSTS_PAGE) {
-    // TODO: реализовать страницу фотографию пользвателя
-    appEl.innerHTML = "Здесь будет страница фотографий пользователя";
-    return;
+    console.log(`айди юзера ${key}`);
+    getUserPosts({
+      token: getToken(),
+      id: key,
+    })
+      .then((newPosts) => {
+        let userPosssts = newPosts;
+        return renderUserPostsPageComponent({ appEl, userPosssts })
+      })
+
   }
 };
 

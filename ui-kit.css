@@ -54,6 +54,19 @@ p {
   border: none;
 }
 
+#add-button {
+  min-width: 1400px;
+}
+
+.choose-picture-button {
+  min-width: 1400px;
+}
+
+.post-description-input {
+  min-width: 1400px;
+  min-height: 100px;
+}
+
 .link-button {
   display: inline;
   border: 0;
